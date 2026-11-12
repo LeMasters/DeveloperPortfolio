@@ -9,6 +9,7 @@
   - "Built with" logos and the main image go through partial "url.html"
   - The project's main image is shown under the title when one is set
   - Reading time shown only for posts of about a minute or more
+  - Headings and tables use the system font (theme: Roboto and Arial)
 */ -}}
 {{ define "main" }}
 <style>
@@ -17,7 +18,7 @@
   .people-image { display: block; border-radius: 50%; }
   .people { margin-left: 20px; margin-right: 20px; }
   .name { margin: auto; }
-  h1, h2, h3, h4, h5, h6 { color: #000; font-family: Roboto, sans-serif; line-height: 1.2; margin-top: 2rem; }
+  h1, h2, h3, h4, h5, h6 { color: #000; line-height: 1.2; margin-top: 2rem; }
   .content img { box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); display: block; margin-left: auto; margin-right: auto; margin-bottom: 30px; max-width: 100%; height: auto; }
   p { margin-bottom: 1em; }
   body p:last-child { margin-bottom: 0em; }
@@ -25,7 +26,7 @@
   @media only screen and (min-width: 960px) { .content img { max-width: 60vw; max-height: 60vh } }
   .content { width: 90vw; max-width: 1200px }
   .content iframe { max-width: 100%; }
-  table { font-family: arial, sans-serif; border-collapse: collapse; width: 100%; }
+  table { border-collapse: collapse; width: 100%; }
   td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; }
 </style>
 

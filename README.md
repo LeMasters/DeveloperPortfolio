@@ -49,3 +49,4 @@ Every text field starts with a description of what belongs in it, and the images
 | `about/list.html` | About page photo and logos through the helper; empty sections hidden. |
 | `contact/list.html` | Contact page shows the student's text and an email button (theme: a form that sends nothing without a Formspree account). |
 | `404.html` | A "Page not found" page (the theme's file is empty). |
+| `assets/css/style.css`, `index.css`, `hexagon.css` | Copies of the theme's stylesheets with its font settings removed, so every page uses the visitor's system font (UIkit's default). The theme named fonts it never loaded (Cantarell, Raleway) and downloaded two from Google Fonts it barely used (Roboto, Playfair Display), so typefaces changed from place to place and from computer to computer. Headings and tables in `_default/single.html` lose their font settings for the same reason. |
