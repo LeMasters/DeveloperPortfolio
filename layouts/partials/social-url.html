@@ -1,0 +1,22 @@
+{{- /*
+  Site-level helper. Builds a social-profile address from a username field,
+  but also accepts a pasted full address.
+    "jordan"                    -> printf pattern "jordan"
+    "@jordan"                   -> same, @ removed
+    "https://…"                 -> used as typed
+    "www.youtube.com/@jordan"   -> https:// added
+  Usage: {{ $u := partial "social-url.html" (dict "v" .github "pattern" "https://github.com/%s") }}
+*/ -}}
+{{- $v := trim (string .v) " \t\r\n" -}}
+{{- $out := "" -}}
+{{- if $v -}}
+  {{- $l := lower $v -}}
+  {{- if or (hasPrefix $l "http://") (hasPrefix $l "https://") -}}
+    {{- $out = $v -}}
+  {{- else if in (index (split (strings.TrimLeft "/" $v) "/") 0) "." -}}
+    {{- $out = printf "https://%s" (strings.TrimLeft "/" $v) -}}
+  {{- else -}}
+    {{- $out = printf .pattern (strings.TrimPrefix "@" (strings.Trim $v "/")) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

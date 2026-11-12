@@ -1,0 +1,31 @@
+{{- /*
+  Site-level override of the theme's footer.html.
+  - Address is plain text (theme: a Google Maps pop-up needing an API key)
+  - Plain copyright line (theme: a Creative Commons BY licence badge, which
+    would license every student's work without their deciding to)
+  - Email and location hidden when empty
+  - UIkit scripts loaded here directly (theme: via params.plugins)
+*/ -}}
+<footer class="footer">
+  <div class="uk-container">
+    <div class="uk-grid-small uk-child-width-1-4@m uk-text-center uk-flex-center uk-margin-medium-bottom" uk-grid>
+      {{- with site.Params.footer.email }}
+      <div class="uk-margin-small-bottom">
+        <h5 class="uk-margin-small-bottom">Email</h5>
+        <a href="mailto:{{ . }}">{{ . }}</a>
+      </div>
+      {{- end }}
+      {{- with site.Params.footer.address }}
+      <div>
+        <h5 class="uk-margin-small-bottom">Location</h5>
+        <span>{{ . }}</span>
+      </div>
+      {{- end }}
+    </div>
+    <div class="footer-copyright uk-text-center" style="padding-bottom: 1rem">
+      &copy; {{ now.Year }} {{ site.Params.author }}
+    </div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit-icons.min.js"></script>

@@ -1,0 +1,65 @@
+banner:
+  title: "Banner headline: a short greeting with your name, e.g. Hi! I'm Jordan."
+  image: images/profile-placeholder.jpg
+social:
+  linkedin: "your-linkedin-name"
+  github: ""
+  itch: "your-itch-username"
+  youtube: ""
+  instagram: ""
+  twitter: ""
+  gitlab: ""
+  bitbucket: ""
+  facebook: ""
+  telegram: ""
+  whatsapp: ""
+about:
+  enable: true
+  content: "One or two sentences introducing yourself: what you make and what kind of work you are looking for."
+  button:
+    btnText: "Button text, e.g. More about me"
+    URL: about/
+portfolio:
+  enable: true
+  item:
+    - title: "Featured project title, e.g. Lantern Hours"
+      image: images/project-placeholder.jpg
+      description: "One or two lines: what the project is, your role, and the tools you used."
+      tools:
+        - unity
+        - blender
+      link: portfolio/example-project/
+      linkLabel: "Link text, e.g. See the project"
+skill:
+  enable: true
+  item:
+    - title: "Skill name, e.g. Level design"
+      logo: images/logo-placeholder.svg
+      description: "What visitors see when they click this skill: where and how you used it, e.g. Blockouts and pacing for three puzzle levels in Unity."
+experience:
+  enable: true
+  item:
+    - title: "Your role, e.g. Student Designer"
+      company: "Organization, e.g. a studio, lab, club or employer"
+      duration: "Dates, e.g. Aug 2025 - Present"
+      logo: images/logo-placeholder.svg
+awards:
+  enable: true
+  item:
+    - title: "Award or recognition, e.g. Best Use of Theme"
+      event: "Who gave it, e.g. Global Game Jam Cincinnati"
+      image: images/award-placeholder.svg
+hackathons:
+  enable: true
+  item:
+    - title: "Game jam name and year, e.g. Global Game Jam 2026"
+      description: "What you made there, in a few words, e.g. A two-player tide puzzle"
+      image: images/jam-placeholder.png
+      url: "https://example.itch.io/your-jam-game"
+education:
+  enable: true
+  item:
+    - title: "Degree or program, e.g. B.A. Games and Simulation (expected)"
+      academy: "School name, e.g. Miami University"
+      year: "Years, e.g. 2024 - 2028"
+      image: images/school-placeholder.svg

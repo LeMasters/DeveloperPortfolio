@@ -1,0 +1,4 @@
+{{- /* Site-level: images in write-ups work whether Pages CMS wrote "images/x.png" or "/images/x.png". */ -}}
+{{- $src := partial "url.html" .Destination -}}
+<img src="{{ $src }}" alt="{{ .Text }}"{{ with .Title }} title="{{ . }}"{{ end }} loading="lazy">
+{{- /* chomp */ -}}

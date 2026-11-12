@@ -1,0 +1,47 @@
+{{- /*
+  Site-level override of the theme's about/list.html.
+  - Photo and logos go through partial "url.html"; no broken-image icons
+  - Section title "Leadership and Teamwork" kept; hidden when switched off or empty
+*/ -}}
+{{ define "main" }}
+{{ partial "page-title.html" . }}
+{{- $about := resources.Get "css/about.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $about.RelPermalink }}">
+
+<section class="uk-margin-large-bottom">
+  <div class="uk-container">
+    <div class="uk-flex-center" uk-grid>
+      {{- with partial "url.html" (.Params.authorImage | default "") }}
+      <div class="uk-width-1-2 uk-width-1-3@s"><img src="{{ . }}" alt="{{ site.Params.author }}"></div>
+      {{- end }}
+      <div class="uk-width-expand@m">
+        {{ .Content }}
+      </div>
+    </div>
+  </div>
+</section>
+
+{{- with site.Data.about.leadership }}{{ if and .enable .item }}
+<section class="uk-margin-large-bottom">
+  <div class="uk-container">
+    <h1 class="uk-heading-line uk-text-center uk-heading-medium uk-margin-medium-bottom"><span>Leadership and Teamwork</span></h1>
+    <div class="uk-child-width-1-4@l uk-child-width-1-2@s uk-text-center uk-flex-center" uk-grid style="padding-left: 20px; padding-right: 20px">
+      {{- range .item }}
+      <div>
+        <div class="uk-card uk-card-default uk-height-large">
+          {{- with partial "url.html" (.logo | default "") }}
+          <div class="uk-card-media-top"><img class="contain experience" src="{{ . }}" alt="" style="padding: 20px" loading="lazy"></div>
+          {{- end }}
+          <div class="uk-card-body" style="padding-top: 0">
+            <div style="height: 5em"><h3 class="uk-card-title">{{ .title }}</h3></div>
+            <p style="height: 4em">{{ .company }}</p>
+            <p>{{ .duration }}</p>
+          </div>
+        </div>
+      </div>
+      {{- end }}
+    </div>
+  </div>
+</section>
+{{- end }}{{ end }}
+{{ end }}

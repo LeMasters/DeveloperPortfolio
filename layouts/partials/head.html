@@ -1,0 +1,33 @@
+{{- /*
+  Site-level override of the theme's head.html.
+  - Page titles built from the student's name (theme: site title on every page)
+  - Sharing image and stylesheets work in a subfolder (theme: leading "/")
+  - Stylesheets fingerprinted, so browsers fetch new versions after a change
+  - UIkit loaded here directly (theme: via params.plugins in the config)
+  - Removed: favicon links to files the template doesn't ship; mailgo pop-up script
+*/ -}}
+{{- $name := site.Params.author | default site.Title -}}
+{{- $title := printf "%s · Portfolio" $name -}}
+{{- if not .IsHome }}{{ $title = printf "%s · %s" .Title $name }}{{ end -}}
+{{- $desc := .Description | default site.Params.description -}}
+<head>
+  <meta charset="utf-8">
+  <title>{{ $title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ $desc }}">
+  <meta name="author" content="{{ $name }}">
+  <meta property="og:title" content="{{ $title }}">
+  <meta property="og:description" content="{{ $desc }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ .Permalink }}">
+  {{- with site.Params.image }}
+  <meta property="og:image" content="{{ (strings.TrimLeft "/" .) | absURL }}">
+  {{- end }}
+  {{ hugo.Generator }}
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/css/uikit.min.css">
+  {{- $styles := resources.Get "css/style.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}" media="screen">
+  {{- $syntax := resources.Get "css/syntax.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $syntax.RelPermalink }}" integrity="{{ $syntax.Data.Integrity }}" media="screen">
+</head>

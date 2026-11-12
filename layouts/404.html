@@ -1,0 +1,10 @@
+{{- /* Site-level: the theme's 404.html is empty, which shows a blank page. */ -}}
+{{ define "main" }}
+<section class="uk-margin-large-top uk-margin-xlarge-bottom">
+  <div class="uk-container uk-text-center">
+    <h1 class="uk-heading-medium">Page not found</h1>
+    <p class="uk-text-lead">That page doesn't exist, or it has moved.</p>
+    <a class="uk-button uk-button-default" href="{{ site.Home.RelPermalink }}">Go to the home page</a>
+  </div>
+</section>
+{{ end }}

@@ -1,0 +1,4 @@
+{{- /* Site-level: links in write-ups typed without https:// (e.g. name.itch.io/game) still work; internal links respect the subfolder. */ -}}
+{{- $href := partial "url.html" .Destination -}}
+<a href="{{ $href }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- /* chomp */ -}}

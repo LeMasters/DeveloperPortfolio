@@ -1,0 +1,45 @@
+{{- /*
+  Site-level override of the theme's header.html.
+  - Home link and menu links work in a subfolder (theme: href="/")
+  - Active-page highlight compares sections (theme's comparison marked every
+    item active when the site lives in a subfolder)
+  - Blog and Portfolio drop out of the menu when they have no entries
+  - Removed: Google Analytics hook
+*/ -}}
+{{- $home := site.Home.RelPermalink -}}
+{{- $homeLabel := site.Params.home | default "Home" -}}
+{{- $items := slice -}}
+{{- range site.Menus.main -}}
+  {{- $sec := trim .URL "/" -}}
+  {{- $show := true -}}
+  {{- if in (slice "blog" "portfolio") $sec -}}
+    {{- if not (where site.RegularPages "Section" $sec) }}{{ $show = false }}{{ end -}}
+  {{- end -}}
+  {{- if $show -}}
+    {{- $items = $items | append (dict "name" .Name "url" (printf "%s/" $sec | relURL) "active" (eq $.Section $sec)) -}}
+  {{- end -}}
+{{- end -}}
+<div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar">
+    <nav class="uk-navbar-container uk-margin" uk-navbar="mode: click;" style="padding-right: 3rem">
+        <div class="uk-navbar-right">
+            <ul class="uk-navbar-nav uk-visible@s">
+                <li{{ if .IsHome }} class="uk-active"{{ end }}><a style="font-size: 18px; text-transform: none" href="{{ $home }}">{{ $homeLabel }}</a></li>
+                {{- range $items }}
+                <li{{ if .active }} class="uk-active"{{ end }}><a style="font-size: 18px; text-transform: none" href="{{ .url }}">{{ .name }}</a></li>
+                {{- end }}
+            </ul>
+            <a class="uk-navbar-toggle uk-hidden@s" uk-toggle="target: #sidenav" uk-navbar-toggle-icon href="#" aria-label="Menu"></a>
+        </div>
+    </nav>
+</div>
+
+<div id="sidenav" uk-offcanvas="overlay: true">
+    <div class="uk-offcanvas-bar uk-flex uk-flex-column">
+        <ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical">
+            <li{{ if .IsHome }} class="uk-active"{{ end }}><a style="font-size: 18px" href="{{ $home }}">{{ $homeLabel }}</a></li>
+            {{- range $items }}
+            <li{{ if .active }} class="uk-active"{{ end }}><a style="font-size: 18px" href="{{ .url }}">{{ .name }}</a></li>
+            {{- end }}
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+leadership:
+  enable: true
+  item:
+    - title: "Role, e.g. Team lead or Club officer"
+      company: "Group or organization, e.g. Miami Game Developers Club"
+      duration: "Dates, e.g. 2025 - 2026"
+      logo: images/logo-placeholder.svg

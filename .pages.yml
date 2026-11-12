@@ -1,0 +1,362 @@
+# Pages CMS configuration for the Developer Portfolio student template.
+# Docs: https://pagescms.org/docs/configuration/
+#
+# Paths are written WITHOUT a leading slash (images/x.jpg, not /images/x.jpg)
+# so they work when the site lives in a subfolder (username.github.io/repository/).
+# Every key in an edited file appears below (hidden where students shouldn't
+# change it), so saving a form never drops a setting.
+
+media:
+  - name: images
+    label: Images
+    input: static/images
+    output: images
+  - name: files
+    label: Files
+    input: static/files
+    output: files
+
+content:
+  # ---------------------------------------------------------------- Profile
+  - name: profile
+    label: Profile
+    type: file
+    path: config/_default/params.yaml
+    format: yaml
+    fields:
+      - name: author
+        label: Your name
+        type: string
+        required: true
+        description: Shown in the browser tab, the footer and link previews.
+      - name: description
+        label: Search and sharing description
+        type: text
+        description: One or two sentences shown in search results and link previews.
+      - name: image
+        label: Sharing image
+        type: image
+        description: Shown when your address is pasted into a message or post. 1200 × 630 px.
+        options:
+          media: images
+      - name: home
+        type: string
+        hidden: true
+      - name: footer
+        label: Contact details
+        type: object
+        fields:
+          - name: email
+            label: Email
+            type: string
+            description: Shown in the footer and on the Contact page. Leave empty to hide.
+          - name: address
+            label: Location
+            type: string
+            description: City and state, e.g. Oxford, Ohio. Leave empty to hide.
+
+  # ---------------------------------------------------------------- Homepage
+  - name: homepage
+    label: Homepage
+    type: file
+    path: data/homepage.yml
+    format: yaml
+    fields:
+      - name: banner
+        label: Banner
+        type: object
+        fields:
+          - name: title
+            label: Headline
+            type: string
+            description: e.g. Hi! I'm Jordan.
+          - name: image
+            label: Photo
+            type: image
+            description: Square, 800 × 800 px. Leave empty for no photo.
+            options:
+              media: images
+
+      - name: social
+        label: Social links
+        type: object
+        description: Type your username, or paste the full address. Leave a box empty to hide that icon.
+        fields:
+          - { name: linkedin, label: LinkedIn (the part after linkedin.com/in/), type: string }
+          - { name: github, label: GitHub username, type: string }
+          - { name: itch, label: itch.io username (the part before .itch.io), type: string }
+          - { name: youtube, label: YouTube handle (without @), type: string }
+          - { name: instagram, label: Instagram username, type: string }
+          - { name: twitter, label: Twitter / X username, type: string }
+          - { name: gitlab, label: GitLab username, type: string }
+          - { name: bitbucket, label: Bitbucket username, type: string }
+          - { name: facebook, label: Facebook username, type: string }
+          - { name: telegram, label: Telegram username, type: string }
+          - { name: whatsapp, label: "WhatsApp number (international format, digits only)", type: string }
+
+      - name: about
+        label: Introduction
+        type: object
+        fields:
+          - { name: enable, label: Show this section, type: boolean }
+          - name: content
+            label: Introduction
+            type: text
+            description: One or two sentences about you.
+          - name: button
+            label: Button
+            type: object
+            fields:
+              - { name: btnText, label: Button text, type: string, description: e.g. More about me }
+              - { name: URL, label: Button goes to, type: string, description: "Usually about/ (your About page). Leave empty to hide the button." }
+
+      - name: portfolio
+        label: Featured projects
+        type: object
+        description: Highlights shown large on the homepage. The full list is the Projects collection.
+        fields:
+          - { name: enable, label: Show this section, type: boolean }
+          - name: item
+            label: Projects
+            type: object
+            list: true
+            fields:
+              - { name: title, type: string, required: true }
+              - name: image
+                type: image
+                description: 1600 px on the long side, under about 400 KB.
+                options:
+                  media: images
+              - { name: description, type: text, description: "One or two lines: what it is, your role, the tools." }
+              - name: tools
+                label: Tool icons
+                type: string
+                list: true
+                description: "Names from simpleicons.org, lowercase, e.g. unity, godotengine, unrealengine, blender, gamemaker."
+              - { name: link, label: Link, type: string, description: "A project page (e.g. portfolio/my-game/) or a full address." }
+              - { name: linkLabel, label: Link text, type: string, description: Leave empty for "Find out more". }
+
+      - name: skill
+        label: Skills
+        type: object
+        fields:
+          - { name: enable, label: Show this section, type: boolean }
+          - name: item
+            label: Skills
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Skill, type: string, required: true }
+              - name: logo
+                label: Icon
+                type: image
+                description: Square image, e.g. the tool's logo. Leave empty for text only.
+                options:
+                  media: images
+              - { name: description, label: Shown when clicked, type: text, description: Where and how you used this skill. }
+
+      - name: experience
+        label: Experience
+        type: object
+        fields:
+          - { name: enable, label: Show this section, type: boolean }
+          - name: item
+            label: Experience
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Role, type: string, required: true }
+              - { name: company, label: Organization, type: string }
+              - { name: duration, label: Dates, type: string, description: e.g. Aug 2025 - Present }
+              - name: logo
+                type: image
+                description: Square logo. Leave empty for none.
+                options:
+                  media: images
+
+      - name: awards
+        label: Awards
+        type: object
+        fields:
+          - { name: enable, label: Show this section, type: boolean }
+          - name: item
+            label: Awards
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Award, type: string, required: true }
+              - { name: event, label: Given by, type: string }
+              - name: image
+                type: image
+                description: Square image. Leave empty for none.
+                options:
+                  media: images
+
+      - name: hackathons
+        label: Game jams
+        type: object
+        fields:
+          - { name: enable, label: Show this section, type: boolean }
+          - name: item
+            label: Game jams
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Jam and year, type: string, required: true }
+              - { name: description, label: What you made, type: string, description: A few words; shown when a visitor hovers or taps. }
+              - name: image
+                type: image
+                description: Square, about 600 × 600 px; shown inside a hexagon.
+                options:
+                  media: images
+              - { name: url, label: Link, type: string, description: "Your jam entry page. Leave empty for no link." }
+
+      - name: education
+        label: Education
+        type: object
+        fields:
+          - { name: enable, label: Show this section, type: boolean }
+          - name: item
+            label: Education
+            type: object
+            list: true
+            fields:
+              - { name: academy, label: School, type: string, required: true }
+              - { name: title, label: Degree or program, type: string }
+              - { name: year, label: Years, type: string }
+              - name: image
+                label: School logo
+                type: image
+                options:
+                  media: images
+
+  # ---------------------------------------------------------------- About page
+  - name: about-page
+    label: About page
+    type: file
+    path: content/about/_index.md
+    format: yaml-frontmatter
+    fields:
+      - { name: title, type: string, hidden: true }
+      - name: authorImage
+        label: Photo
+        type: image
+        description: Leave empty for no photo.
+        options:
+          media: images
+      - { name: body, label: About text, type: rich-text }
+
+  - name: teamwork
+    label: About page – Leadership and teamwork
+    type: file
+    path: data/about.yml
+    format: yaml
+    fields:
+      - name: leadership
+        label: Leadership and teamwork
+        type: object
+        fields:
+          - { name: enable, label: Show this section, type: boolean }
+          - name: item
+            label: Roles
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Role, type: string, required: true }
+              - { name: company, label: Group or organization, type: string }
+              - { name: duration, label: Dates, type: string }
+              - name: logo
+                type: image
+                options:
+                  media: images
+
+  # ---------------------------------------------------------------- Projects
+  - name: projects
+    label: Projects
+    type: collection
+    path: content/portfolio
+    filename: "{primary}.md"
+    exclude: [_index.md]
+    format: yaml-frontmatter
+    view:
+      fields: [title, date]
+      primary: title
+      default:
+        sort: date
+        order: desc
+    fields:
+      - { name: title, type: string, required: true }
+      - { name: date, type: date, required: true, description: Sets the order on the Portfolio page (newest first). }
+      - { name: description, label: Card text, type: string, description: One line shown on the project's card. }
+      - name: image
+        label: Main image
+        type: image
+        description: 1600 px on the long side, under about 400 KB.
+        options:
+          media: images
+      - name: categories
+        label: Filter categories
+        type: string
+        list: true
+        description: Must match a filter value in "Portfolio filters", e.g. level-design.
+      - { name: site, label: Link, type: string, description: "e.g. your itch.io page. Leave empty for no button." }
+      - { name: siteLabel, label: Link button text, type: string, description: Leave empty for "Website". }
+      - { name: github, label: GitHub repositories, type: string, list: true, description: Full addresses. }
+      - { name: coders, label: Teammates' GitHub usernames, type: string, list: true }
+      - name: tech
+        label: Built with
+        type: object
+        list: true
+        fields:
+          - { name: name, type: string }
+          - name: logo
+            type: image
+            options:
+              media: images
+          - { name: url, label: Link, type: string }
+      - { name: body, label: Write-up, type: rich-text }
+
+  - name: portfolio-filters
+    label: Portfolio filters
+    type: file
+    path: data/portfolio.yml
+    format: yaml
+    fields:
+      - name: filter
+        label: Filter buttons
+        type: object
+        list: true
+        description: Buttons above the project list. Leave empty for no buttons.
+        fields:
+          - { name: label, label: Button text, type: string }
+          - { name: value, label: Category, type: string, description: "Lowercase with hyphens, e.g. level-design. Use the same word in each project's Filter categories." }
+
+  # ---------------------------------------------------------------- Blog
+  - name: blog
+    label: Blog
+    type: collection
+    path: content/blog
+    filename: "{year}-{month}-{day}-{primary}.md"
+    exclude: [_index.md]
+    format: yaml-frontmatter
+    view:
+      fields: [title, date]
+      primary: title
+      default:
+        sort: date
+        order: desc
+    fields:
+      - { name: title, type: string, required: true }
+      - { name: date, type: date, required: true }
+      - { name: description, label: Summary, type: string }
+      - { name: body, type: rich-text }
+
+  # ---------------------------------------------------------------- Contact
+  - name: contact
+    label: Contact page
+    type: file
+    path: content/contact/_index.md
+    format: yaml-frontmatter
+    fields:
+      - { name: title, type: string, hidden: true }
+      - { name: body, label: Contact text, type: rich-text, description: Your email button appears below this text. }

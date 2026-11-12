@@ -1,0 +1,287 @@
+{{- /*
+  Site-level override of the theme's index.html (the homepage).
+  Changes from the theme:
+  - Every image and link goes through partial "url.html", so paths work in a
+    subfolder and addresses typed without https:// still work
+  - Items without an image show no broken-image icon
+  - Social links accept a username or a full address; itch.io and YouTube added
+  - "Hackathons" retitled "Game jams"
+  - Portfolio highlights: link text editable (default "Find out more")
+  - Publications moved out of the Education section (theme bug: they showed
+    only when Education was switched on); Certifications and Publications are
+    kept but are not in the student forms
+  - Stylesheets fingerprinted (fresh after every change)
+*/ -}}
+{{ define "main" }}
+{{- $d := site.Data.homepage -}}
+{{- $hexagons := resources.Get "css/hexagon.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $hexagons.RelPermalink }}">
+{{- $index := resources.Get "css/index.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $index.RelPermalink }}">
+
+<!-- Banner -->
+<section>
+    {{- with partial "url.html" ($d.banner.image | default "") }}
+    <div class="uk-container">
+        <div class="uk-flex-center" uk-grid>
+            <div class="uk-width-1-2 uk-width-1-3@s">
+                <img src="{{ . }}" alt="{{ site.Params.author }}">
+            </div>
+        </div>
+    </div>
+    {{- end }}
+    <div class="uk-container uk-margin-large-top uk-margin-xlarge-bottom">
+        <h1 class="uk-heading-large">{{ $d.banner.title | safeHTML }}</h1>
+    </div>
+</section>
+
+<!-- Social links -->
+{{- $s := $d.social -}}
+{{- $links := slice
+  (dict "v" $s.linkedin  "pattern" "https://www.linkedin.com/in/%s" "icon" "https://cdn.svgporn.com/logos/linkedin-icon.svg" "label" "LinkedIn")
+  (dict "v" $s.github    "pattern" "https://github.com/%s"          "icon" "https://cdn.svgporn.com/logos/github-icon.svg"   "label" "GitHub")
+  (dict "v" $s.itch      "pattern" "https://%s.itch.io"             "icon" "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/itchdotio.svg" "label" "itch.io")
+  (dict "v" $s.youtube   "pattern" "https://www.youtube.com/@%s"    "icon" "https://cdn.svgporn.com/logos/youtube-icon.svg"  "label" "YouTube")
+  (dict "v" $s.instagram "pattern" "https://instagram.com/%s"       "icon" "https://cdn.svgporn.com/logos/instagram-icon.svg" "label" "Instagram")
+  (dict "v" $s.twitter   "pattern" "https://twitter.com/%s"         "icon" "https://cdn.svgporn.com/logos/twitter.svg"       "label" "Twitter / X")
+  (dict "v" $s.gitlab    "pattern" "https://gitlab.com/%s"          "icon" "https://cdn.svgporn.com/logos/gitlab.svg"        "label" "GitLab")
+  (dict "v" $s.bitbucket "pattern" "https://bitbucket.org/%s"       "icon" "https://cdn.svgporn.com/logos/bitbucket.svg"     "label" "Bitbucket")
+  (dict "v" $s.facebook  "pattern" "https://www.facebook.com/%s"    "icon" "https://cdn.svgporn.com/logos/facebook.svg"      "label" "Facebook")
+  (dict "v" $s.telegram  "pattern" "https://t.me/%s"                "icon" "https://cdn.svgporn.com/logos/telegram.svg"      "label" "Telegram")
+  (dict "v" $s.whatsapp  "pattern" "https://wa.me/%s"               "icon" "https://cdn.svgporn.com/logos/whatsapp.svg"      "label" "WhatsApp")
+-}}
+<div class="uk-text-center uk-margin-xlarge-bottom uk-margin-xlarge-top">
+    <ul id="links" class="icons">
+        {{- range $links }}
+        {{- $icon := .icon }}{{ $label := .label }}
+        {{- with partial "social-url.html" (dict "v" (.v | default "") "pattern" .pattern) }}
+        <li><a href="{{ . }}" aria-label="{{ $label }}" title="{{ $label }}"><img class="contain" src="{{ $icon }}" alt="{{ $label }}" loading="lazy"></a></li>
+        {{- end }}
+        {{- end }}
+    </ul>
+</div>
+
+<!-- About -->
+{{- with $d.about }}{{ if .enable }}
+<section class="uk-margin-large-top">
+    <div class="uk-container">
+        <div class="uk-text-center">
+            <p class="uk-text-lead">{{ .content | markdownify }}</p>
+            {{- with .button }}
+            {{- $btnText := .btnText | default "Find out more" }}
+            {{- with partial "url.html" (.URL | default "") }}
+            <a class="uk-button uk-button-text" href="{{ . }}">{{ $btnText }}</a>
+            {{- end }}
+            {{- end }}
+        </div>
+    </div>
+</section>
+{{- end }}{{ end }}
+
+<!-- Portfolio highlights -->
+{{- with $d.portfolio }}{{ if and .enable .item }}
+<section class="uk-margin-large-bottom uk-margin-large-top">
+    <div class="uk-container">
+        <h1 class="uk-heading-line uk-heading-medium"><span>Portfolio</span></h1>
+        {{- range .item }}
+        <div>
+            <h2 class="uk-text-center uk-text-bold uk-margin-large-top">{{ .title }}</h2>
+            {{- with partial "url.html" (.image | default "") }}
+            <div class="uk-flex uk-flex-center">
+                <img src="{{ . }}" class="uk-width-medium uk-width-large@s uk-height-large contain" alt="" loading="lazy">
+            </div>
+            {{- end }}
+            <p class="uk-text-center">{{ .description }}</p>
+            {{- with .tools }}
+            <div class="uk-flex uk-flex-center">
+                <div uk-grid>
+                    {{- range . }}
+                    <div><img height="32" width="32" src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/{{ lower . }}.svg" alt="{{ . }}" title="{{ . }}" loading="lazy"></div>
+                    {{- end }}
+                </div>
+            </div>
+            {{- end }}
+            {{- $label := .linkLabel | default "Find out more" }}
+            {{- with partial "url.html" (.link | default "") }}
+            <div class="uk-flex uk-flex-center uk-margin-medium-top">
+                <a href="{{ . }}" class="uk-text-center">{{ $label }}</a>
+            </div>
+            {{- end }}
+        </div>
+        {{- end }}
+    </div>
+</section>
+{{- end }}{{ end }}
+
+<!-- Skills -->
+{{- with $d.skill }}{{ if and .enable .item }}
+{{- range .item }}
+<div id="modal_{{ .title | anchorize }}" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header"><h2 class="uk-modal-title">{{ .title }}</h2></div>
+        <p>{{ .description | markdownify }}</p>
+    </div>
+</div>
+{{- end }}
+<section class="uk-margin-large-top uk-margin-large-bottom">
+    <div class="uk-container">
+        <h1 class="uk-heading-line uk-text-center uk-heading-medium"><span>Skills</span></h1>
+        <p class="uk-text-center uk-text-lead"><i>Click a skill to find out more</i></p>
+        <div class="uk-child-width-1-6@l uk-child-width-1-3@m uk-child-width-1-3@s uk-child-width-1-2 uk-text-center uk-flex-center" uk-grid>
+            {{- range .item }}
+            <div class="imagemargin" style="cursor: pointer" uk-toggle="target: #modal_{{ .title | anchorize }}">
+                {{- with partial "url.html" (.logo | default "") }}
+                <img class="contain skills" src="{{ . }}" alt="" loading="lazy">
+                {{- end }}
+                <h4>{{ .title }}</h4>
+            </div>
+            {{- end }}
+        </div>
+    </div>
+</section>
+{{- end }}{{ end }}
+
+<!-- Experience -->
+{{- with $d.experience }}{{ if and .enable .item }}
+<section class="uk-margin-large-bottom">
+    <div class="uk-container">
+        <h1 class="uk-heading-line uk-heading-medium"><span>Experience</span></h1>
+        <div class="uk-child-width-1-4@m uk-child-width-1-2 uk-text-center uk-flex-center" uk-grid style="padding-left: 20px; padding-right: 20px">
+            {{- range .item }}
+            <div>
+                <div class="uk-card uk-card-default uk-height-large">
+                    {{- with partial "url.html" (.logo | default "") }}
+                    <div class="uk-card-media-top"><img class="contain experience" src="{{ . }}" alt="" style="padding: 20px" loading="lazy"></div>
+                    {{- end }}
+                    <div class="uk-card-body" style="padding: initial">
+                        <div style="height: 5em"><h3 class="uk-card-title uk-heading-small">{{ .title }}</h3></div>
+                        <p style="height: 4em">{{ .company }}</p>
+                        <p>{{ .duration }}</p>
+                    </div>
+                </div>
+            </div>
+            {{- end }}
+        </div>
+    </div>
+</section>
+{{- end }}{{ end }}
+
+<!-- Certifications (not in the student forms; kept so the theme's data still works) -->
+{{- with $d.certifications }}{{ if and .enable .item }}
+<section class="uk-margin-large-top uk-margin-medium-bottom">
+    <div class="uk-container">
+        <h1 class="uk-heading-line uk-heading-medium"><span>Certifications</span></h1>
+        <div class="uk-child-width-1-6@l uk-child-width-1-3@m uk-child-width-1-3@s uk-child-width-1-2 uk-text-center uk-flex-center" uk-grid>
+            {{- range .item }}
+            <a href="{{ partial "url.html" (.url | default "") }}" class="imagemargin">
+                {{- with partial "url.html" (.image | default "") }}<img class="contain certs" src="{{ . }}" alt="" loading="lazy">{{ end }}
+                {{ .title }}
+            </a>
+            {{- end }}
+        </div>
+    </div>
+</section>
+{{- end }}{{ end }}
+
+<!-- Awards -->
+{{- with $d.awards }}{{ if and .enable .item }}
+<section class="uk-margin-large-top uk-margin-medium-bottom">
+    <div class="uk-container">
+        <h1 class="uk-heading-line uk-heading-medium"><span>Awards and Achievements</span></h1>
+        <div class="uk-child-width-1-6@l uk-child-width-1-3@m uk-child-width-1-3@s uk-child-width-1-2 uk-text-center uk-flex-center" uk-grid uk-height-match="target: > div > h4">
+            {{- range .item }}
+            <div class="imagemargin">
+                {{- with partial "url.html" (.image | default "") }}<img class="contain certs" src="{{ . }}" alt="" loading="lazy">{{ end }}
+                <h4>{{ .title }}</h4>
+                <p>{{ .event }}</p>
+            </div>
+            {{- end }}
+        </div>
+    </div>
+</section>
+{{- end }}{{ end }}
+
+<!-- Game jams (the theme's "Hackathons" section) -->
+{{- with $d.hackathons }}{{ if and .enable .item }}
+<section class="uk-margin-large-bottom">
+    <div class="uk-container">
+        <h1 class="uk-heading-line uk-heading-medium"><span>Game jams</span></h1>
+    </div>
+    <p class="uk-text-center uk-text-lead"><i>Hover over or tap an image to find out more</i></p>
+</section>
+<div class="uk-container uk-margin-large-bottom uk-text-center">
+    <ul id="hexGrid">
+        {{- range .item }}
+        {{- $href := "" }}{{ if ne (.url | default "none") "none" }}{{ $href = partial "url.html" (.url | default "") }}{{ end }}
+        <li class="hex">
+            <div class="hexIn">
+                <div class="hexLink">
+                    {{- with partial "url.html" (.image | default "") }}<img src="{{ . }}" alt="" loading="lazy">{{ end }}
+                    {{- if $href }}
+                    <a href="{{ $href }}" class="text unset"><h1>{{ .title }}</h1></a>
+                    <a href="{{ $href }}" class="text unset"><p>{{ .description }}</p></a>
+                    {{- else }}
+                    <div style="all:unset"><h1>{{ .title }}</h1></div>
+                    <div style="all:unset"><p>{{ .description }}</p></div>
+                    {{- end }}
+                </div>
+            </div>
+        </li>
+        {{- end }}
+    </ul>
+</div>
+{{- end }}{{ end }}
+
+<!-- Education -->
+{{- with $d.education }}{{ if and .enable .item }}
+<section class="uk-margin-xlarge-bottom">
+    <div class="uk-container">
+        <h1 class="uk-heading-line uk-heading-medium uk-margin-large-bottom"><span>Education</span></h1>
+        <div class="uk-grid-large uk-child-width-1-3@s uk-child-width-1 uk-text-center uk-flex-center" uk-grid style="padding-left: 20px; padding-right: 20px">
+            {{- range .item }}
+            <div>
+                <div class="uk-card uk-card-default uk-height-max-large">
+                    {{- with partial "url.html" (.image | default "") }}
+                    <div class="uk-card-media-top"><img class="contain experience" src="{{ . }}" alt="" style="padding: 20px" loading="lazy"></div>
+                    {{- end }}
+                    <div class="uk-card-body" style="padding-top: 0">
+                        <div style="height: 5em"><h3 class="uk-card-title">{{ .academy }}</h3></div>
+                        <p style="height: 4em">{{ .title }}</p>
+                        <p>{{ .year }}</p>
+                    </div>
+                </div>
+            </div>
+            {{- end }}
+        </div>
+    </div>
+</section>
+{{- end }}{{ end }}
+
+<!-- Publications (not in the student forms; kept so the theme's data still works) -->
+{{- with $d.publications }}{{ if and .enable .item }}
+<section class="uk-margin-xlarge-bottom">
+    <div class="uk-container">
+        <h1 class="uk-heading-line uk-heading-medium uk-margin-large-bottom"><span>Publications</span></h1>
+        {{- range .item }}
+        <div class="uk-margin-large-bottom">
+            <div class="uk-flex-center" uk-grid uk-height-match=".publication">
+                {{- with partial "url.html" (.image | default "") }}
+                <div class="uk-width-1-2 uk-width-1-4@s publication"><img class="contain publications" src="{{ . }}" alt=""></div>
+                {{- end }}
+                <div class="uk-width-expand@m publication">
+                    <h3 class="uk-card-title">{{ .title }}</h3>
+                    <p>{{ .description }}</p>
+                    <p>
+                        {{- with partial "url.html" (.pdf_link | default "") }}<a class="uk-button uk-button-primary" href="{{ . }}">PDF</a>{{ end }}
+                        {{- with partial "url.html" (.code_link | default "") }} <a class="uk-button uk-button-primary" href="{{ . }}">Code</a>{{ end }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <hr>
+        {{- end }}
+    </div>
+</section>
+{{- end }}{{ end }}
+{{ end }}

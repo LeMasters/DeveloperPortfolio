@@ -1,0 +1,45 @@
+{{- /*
+  Site-level override of the theme's portfolio/list.html.
+  - Card images go through partial "url.html"; no broken-image icons
+  - Filter buttons appear only when filters are defined
+  - Projects without categories no longer break the page
+  - Newest projects first
+*/ -}}
+{{ define "main" }}
+{{ partial "page-title.html" . }}
+{{- $filters := site.Data.portfolio.filter | default slice }}
+<section>
+  <div class="uk-container uk-margin-xlarge-bottom">
+    <div uk-filter="target: .js-filter">
+      {{- if $filters }}
+      <ul class="uk-subnav uk-subnav-pill uk-subnav-divider">
+        <li class="uk-active" uk-filter-control><a href="#">All</a></li>
+        {{- range $filters }}
+        <li uk-filter-control="[data-tags*='{{ .value }}']"><a href="#">{{ .label }}</a></li>
+        {{- end }}
+      </ul>
+      {{- end }}
+      <ul class="js-filter uk-child-width-1-1 uk-child-width-1-4@m uk-text-center" uk-grid uk-height-match="target: > li > div > .fixy">
+        {{- range .Pages.ByDate.Reverse }}
+        <li data-tags="{{ delimit (.Params.categories | default slice) " " }}">
+          <div class="uk-card uk-card-default" style="position: relative;">
+            <div class="fixy">
+              {{- with partial "url.html" (.Params.image | default "") }}
+              <div class="uk-card-media-top"><img class="contain experience" src="{{ . }}" alt="" loading="lazy"></div>
+              {{- end }}
+              <div class="uk-card-body">
+                <h3 class="uk-card-title">{{ .Title }}</h3>
+                <p>{{ .Params.description }}</p>
+              </div>
+            </div>
+            <div class="uk-card-footer">
+              <a href="{{ .RelPermalink }}" class="uk-button uk-button-text">Read more</a>
+            </div>
+          </div>
+        </li>
+        {{- end }}
+      </ul>
+    </div>
+  </div>
+</section>
+{{ end }}

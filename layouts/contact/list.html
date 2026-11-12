@@ -1,0 +1,18 @@
+{{- /*
+  Site-level override of the theme's contact/list.html.
+  The theme's page is a form that sends nothing unless a Formspree account is
+  set up. This version shows the student's own words and an email button.
+*/ -}}
+{{ define "main" }}
+{{ partial "page-title.html" . }}
+<section>
+  <div class="uk-container uk-container-small uk-margin-xlarge-bottom uk-text-center">
+    {{- with .Content }}<div class="uk-text-lead">{{ . }}</div>{{ end }}
+    {{- with site.Params.footer.email }}
+    <p class="uk-margin-medium-top">
+      <a class="uk-button uk-button-default uk-button-large" href="mailto:{{ . }}"><span uk-icon="icon: mail"></span> {{ . }}</a>
+    </p>
+    {{- end }}
+  </div>
+</section>
+{{ end }}

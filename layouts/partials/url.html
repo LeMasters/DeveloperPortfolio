@@ -1,0 +1,29 @@
+{{- /*
+  Site-level helper (not in the theme). Turns whatever a student typed in a
+  link or image field into an address that works when the site lives in a
+  subfolder (username.github.io/repository/).
+    https://…, http://…, mailto:…, #…   used as typed
+    www.example.com/…, name.itch.io/…   https:// added (first part contains a dot)
+    images/x.png, /images/x.png         made relative to the site (leading slash removed)
+    portfolio/my-game/                  same
+  Returns "" for an empty field, so callers can skip the element.
+  Usage: {{ $src := partial "url.html" .image }}
+*/ -}}
+{{- $u := trim (string .) " \t\r\n" -}}
+{{- $out := "" -}}
+{{- if $u -}}
+  {{- $l := lower $u -}}
+  {{- if or (hasPrefix $l "http://") (hasPrefix $l "https://") (hasPrefix $l "mailto:") (hasPrefix $l "#") (hasPrefix $l "data:") -}}
+    {{- $out = $u -}}
+  {{- else -}}
+    {{- $p := strings.TrimLeft "/" $u -}}
+    {{- $first := index (split $p "/") 0 -}}
+    {{- $isFile := findRE `\.(png|jpe?g|gif|svg|webp|avif|pdf|ico|mp4|webm)$` (lower $first) -}}
+    {{- if and (in $first ".") (not $isFile) -}}
+      {{- $out = printf "https://%s" $p -}}
+    {{- else -}}
+      {{- $out = $p | relURL -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

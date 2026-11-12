@@ -1,0 +1,112 @@
+{{- /*
+  Site-level override of the theme's single.html (one project or blog post).
+  - Team, website and GitHub buttons appear independently (theme: website and
+    GitHub buttons showed only when a team list existed)
+  - Website button text editable per project (siteLabel; default "Website"),
+    e.g. "Play it on itch.io"
+  - GitHub repository icon from UIkit (theme: an image hosted on the theme
+    author's own account)
+  - "Built with" logos and the main image go through partial "url.html"
+  - The project's main image is shown under the title when one is set
+  - Reading time shown only for posts of about a minute or more
+*/ -}}
+{{ define "main" }}
+<style>
+  p { margin: 0 }
+  .people-wrap { display: inline-flex; margin-top: 10px; }
+  .people-image { display: block; border-radius: 50%; }
+  .people { margin-left: 20px; margin-right: 20px; }
+  .name { margin: auto; }
+  h1, h2, h3, h4, h5, h6 { color: #000; font-family: Roboto, sans-serif; line-height: 1.2; margin-top: 2rem; }
+  .content img { box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); display: block; margin-left: auto; margin-right: auto; margin-bottom: 30px; max-width: 100%; height: auto; }
+  p { margin-bottom: 1em; }
+  body p:last-child { margin-bottom: 0em; }
+  img.skills { height: 80px; }
+  @media only screen and (min-width: 960px) { .content img { max-width: 60vw; max-height: 60vh } }
+  .content { width: 90vw; max-width: 1200px }
+  .content iframe { max-width: 100%; }
+  table { font-family: arial, sans-serif; border-collapse: collapse; width: 100%; }
+  td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; }
+</style>
+
+{{- $coders := .Params.coders | default slice }}
+{{- $github := .Params.github | default slice }}
+{{- $site := partial "url.html" (.Params.site | default "") }}
+{{- $minutes := math.Round (div (countwords .Content) 220.0) }}
+<section>
+  <div class="uk-container uk-margin-large-bottom uk-margin-medium-top">
+    <h1 class="uk-text-center uk-heading-medium">{{ .Title }}</h1>
+    {{- with .Params.description }}<p class="uk-text-center uk-text-lead">{{ . }}</p>{{ end }}
+    <p class="uk-text-center">{{ .Date.Format "January 2, 2006" }}{{ if ge $minutes 1 }} · {{ $minutes }} min read{{ end }}</p>
+
+    {{- with partial "url.html" (.Params.image | default "") }}
+    <div class="uk-flex uk-flex-center uk-margin-medium-top"><img src="{{ . }}" alt="" style="max-height: 60vh; max-width: 100%"></div>
+    {{- end }}
+
+    {{- if or $coders $github $site }}
+    <div class="uk-child-width-1-4@m uk-child-width-1-2@s uk-text-center uk-flex-center uk-grid-large uk-margin-small-top" uk-grid>
+      {{- if $coders }}
+      <div>
+        <button class="uk-button uk-button-default" type="button"><span uk-icon="icon: users"></span> Team project</button>
+        <div class="uk-width-auto" uk-dropdown="pos: bottom-center; delay-hide:400">
+          <ul class="uk-nav uk-dropdown-nav">
+            {{- range $coders }}
+            <li><a href="https://github.com/{{ . }}"><img src="https://github.com/{{ . }}.png" alt="" width="42" height="42" style="border-radius: 50%"> {{ . }}</a></li>
+            {{- end }}
+          </ul>
+        </div>
+      </div>
+      {{- end }}
+
+      {{- with $site }}
+      <div>
+        <a class="uk-button uk-button-default" href="{{ . }}"><span uk-icon="icon: world"></span> {{ $.Params.siteLabel | default "Website" }}</a>
+      </div>
+      {{- end }}
+
+      {{- if gt (len $github) 1 }}
+      <div>
+        <button class="uk-button uk-button-default" type="button"><span uk-icon="icon: github"></span> GitHub</button>
+        <div class="uk-width-auto" uk-dropdown="pos: bottom-center; delay-hide:400">
+          <ul class="uk-nav uk-dropdown-nav">
+            {{- range $github }}
+            <li><a style="color: #0366d6; font-weight: 600" href="{{ partial "url.html" . }}"><span uk-icon="icon: folder"></span> {{ index (last 1 (split (strings.TrimRight "/" .) "/")) 0 }}</a></li>
+            {{- end }}
+          </ul>
+        </div>
+      </div>
+      {{- else if eq (len $github) 1 }}
+      <div>
+        <a class="uk-button uk-button-default" href="{{ partial "url.html" (index $github 0) }}"><span uk-icon="icon: github"></span> GitHub</a>
+      </div>
+      {{- end }}
+    </div>
+    {{- end }}
+
+    <hr class="full-width">
+    {{- with .Params.tech }}
+    <h2 class="uk-text-center uk-heading-small">Built with</h2>
+    <section>
+      <div class="uk-container">
+        <div class="uk-child-width-1-6@l uk-child-width-1-3@m uk-child-width-1-3@s uk-child-width-1-2 uk-text-center uk-flex-center" uk-grid>
+          {{- range . }}
+          {{- $logo := partial "url.html" (.logo | default "") }}
+          {{- $href := partial "url.html" (.url | default "") }}
+          <div class="imagemargin">
+            {{- if $href }}<a href="{{ $href }}">{{ end }}
+            {{- if $logo }}<img class="contain skills" src="{{ $logo }}" alt="{{ .name }}" title="{{ .name }}" loading="lazy">{{ else }}<span>{{ .name }}</span>{{ end }}
+            {{- if $href }}</a>{{ end }}
+          </div>
+          {{- end }}
+        </div>
+      </div>
+    </section>
+    <hr class="full-width">
+    {{- end }}
+
+    <div class="content">
+      {{ .Content }}
+    </div>
+  </div>
+</section>
+{{ end }}
